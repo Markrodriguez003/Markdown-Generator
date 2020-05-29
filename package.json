@@ -1,0 +1,29 @@
+{
+  "name": "markdown-generator",
+  "version": "1.0.0",
+  "description": "CLI app that helps user generate markdown (.MD) files",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Markrodriguez003/Markdown-Generator.git"
+  },
+  "keywords": [
+    "Markdown",
+    "generator",
+    ".MD"
+  ],
+  "author": "Mark Anthony Patrick Rodriguez <markrodriguez003@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Markrodriguez003/Markdown-Generator/issues"
+  },
+  "homepage": "https://github.com/Markrodriguez003/Markdown-Generator#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "inquirer": "^7.1.0",
+    "jest": "^26.0.1"
+  }
+}
