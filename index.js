@@ -1,6 +1,6 @@
-const inquirer = require("inquirer");
-/* const api_caller = require("utils/api_caller.js");
-const markdownGenerator = require("utils/markdownGenerator.js"); */
+const inquirer = require(`inquirer`);
+/* const api_caller = require("utils/api_caller.js");*/
+const mdGenerator = require(`./utils/markdownGenerator.js`);
 
 /* Ctrl + Shift + [ <-- collapsables    CTRL+K+C comments */
 
@@ -52,12 +52,11 @@ function init() {
             },
         ])
         .then((response) => {
-            console.log(` You picked: ${response.main_menu_choice}`)
             if (response.main_menu_choice === "Instructions") {
-                instructions()
+                instructions();
             } else if (response.main_menu_choice === "Generate .MD") {
                 console.log("generating");
-                markdown_prompt();
+                markdown_config();
             } else {
                 console.log("Exiting . . . ");
             }
@@ -69,16 +68,14 @@ function init() {
 
 function instructions() {
     console.log(`
-    
-    ${ ascii_art_generator.bar()}
-    What is a markdown file and why use it?
+    <What is a markdown file (.md) and why use it?>
 
     This CLI app will guide you to create your own project markdown file (.MD). Markdown files
     are files that contains "readme" style sections that help describe the many facets of your application/project, from
     use case scenarios, app instructions, app description, author information, external help/github links and more!
     Markdown files are created using plaintext, can be converted to HTML and can be read everywhere on any device.
 
-    Ok, I got you! So how do I use this CLI app to generate my own markdown file?
+    <Ok, I got you! So how do I use this CLI app to generate my own markdown file?>
 
     To get started, press "Generate .MD" in the main menu and answer the prompts to fill in your created markdown file.
     After finishing the prompts, a screen will display all of your inputs in which you can verify and accept to generate 
@@ -89,34 +86,32 @@ function instructions() {
 
     If you have any questions, concerns or suggestions please contact me at <markrodriguez003@gmail.com> and thanks for
     using the markdown generator!
-    ${ ascii_art_generator.bar()} 
-    
-    `)
+    `);
 
     inquirer
         .prompt([
             {
                 type: 'list',
-                name: 'menu_choice',
-                message: '',
+                name: 'resp',
                 choices: ['Main menu', "Exit"]
             },
         ])
         .then((response) => {
-            console.log(` You picked: ${response.menu_choice}`)
-            if (menu_choice === "Main menu") {
-                init()
-            } else {
+            console.log(` You picked: ${response.resp}`);
+            if (response.resp === "Main menu") {
+                init();
+            } else if (response.resp === "Exit") {
                 console.log("Exiting . . . ");
+            } else {
+                console.log("Error");
             }
-
         })
         .catch((err) => {
-            console.log("Error -->> Main Menu choice error");
+            console.log("Error -->> Instructions menu choice error");
         })
 }
 
-function markdown_prompt() {
+function markdown_config() {
     questions = [
         "Author [firstName lastName <user@email.com>]",
         "Project title [My Project]:",
@@ -129,12 +124,12 @@ function markdown_prompt() {
         "Project License [MIT, LGPL, Proprietary, ect]:",
     ];
 
-    markdown_details = [];
     inquirer
         .prompt([
             {
                 name: 'author',
                 message: questions[0],
+
             },
             {
                 name: 'title',
@@ -145,11 +140,11 @@ function markdown_prompt() {
                 message: questions[2],
             },
             {
-                name: 'github-email',
+                name: 'githubEmail',
                 message: questions[3],
             },
             {
-                name: 'github-repo',
+                name: 'githubRepo',
                 message: questions[4],
             },
             {
@@ -159,31 +154,125 @@ function markdown_prompt() {
             {
                 name: 'test',
                 message: questions[6],
+                default: "test.js"
             },
             {
                 name: 'contribution',
                 message: questions[7],
+
             },
             {
                 name: 'license',
                 message: questions[8],
+                default: "MIT"
             },
         ])
         .then(answers => {
-        /*     console.log(answers);
-            markdown_details.push(answers); */
-            markdownGenerator.generate(markdown_details);
+            confirmation_prompt(answers);
+
         }).catch(err => {
             console.log(err);
-          /*   throw "An error has occured at markdown_prompt point"; */
         });
 
 
-} // eof markdown_prompt
+} // eof markdown_config
+function confirmation_prompt(data) {
 
-init();
+    console.log("Preconfig .md file:");
+    console.log(data);
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'redo_menu_choice',
+                choices: ['Re-do Markdown Config', "Generate .MD", "Exit"]
+            },
+        ])
+        .then((response) => {
+            if (response.redo_menu_choice === "Re-do Markdown Config") {
+                md_check(data);
+            } else if (response.redo_menu_choice === "Generate .MD") {
+                console.log("generating");
+                mdGenerator.generate(data);
+            } else {
+                console.log("Exiting . . . ");
+            }
+        })
+        .catch((err) => {
+            console.log("Error -->> Confirmation-Prompt Menu choice error");
+        })
+}
 
-/* module.export =  */
+
+function md_check(data) {
+    inquirer
+        .prompt([
+            {
+                name: 'author',
+                message: questions[0],
+                default: String(data.author)
+
+            },
+            {
+                name: 'title',
+                message: questions[1],
+                default: String(data.title)
+
+            },
+            {
+                name: 'description',
+                message: questions[2],
+                default: String(data.description)
+
+            },
+            {
+                name: 'githubEmail',
+                message: questions[3],
+                default: String(data.githubEmail)
+
+            },
+            {
+                name: 'githubRepo',
+                message: questions[4],
+                default: String(data.githubRepo)
+
+            },
+            {
+                name: 'usage',
+                message: questions[5],
+                default: String(data.usage)
+
+            },
+            {
+                name: 'test',
+                message: questions[6],
+                default: String(data.test)
+
+            },
+            {
+                name: 'contribution',
+                message: questions[7],
+                default: String(data.contribution)
+
+
+            },
+            {
+                name: 'license',
+                message: questions[8],
+                default: String(data.license)
+
+            },
+        ])
+        .then(answers => {
+            confirmation_prompt(answers);
+
+        }).catch(err => {
+            console.log(err);
+        });
+}
+
+init(); // Start of CLI APP
+
 
 
 
