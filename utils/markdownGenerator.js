@@ -1,7 +1,7 @@
 let fs = require("fs")
 
 /* GRABS ALL USER .MD PREFERENCES AND CREATES .MD FILE */
-
+ 
 /* markdown_generate_file(MD_Data){
     MD.Data.title
     create .md file
@@ -19,4 +19,10 @@ let fs = require("fs")
 
 
 /* Markdown CheatSheet */
-/* EXPORT FUNCS HERE */
+
+function generate (markdown_data){
+    console.log(markdown_data);
+
+}
+
+module.exports.generate = "generate";
