@@ -1,6 +1,7 @@
 const inquirer = require(`inquirer`);
 /* const api_caller = require("utils/api_caller.js");*/
 const mdGenerator = require(`./utils/markdownGenerator.js`);
+const api_caller = require(`./utils/api_caller.js`);
 
 /* Ctrl + Shift + [ <-- collapsables    CTRL+K+C comments */
 
@@ -129,7 +130,6 @@ function markdown_config() {
             {
                 name: 'author',
                 message: questions[0],
-
             },
             {
                 name: 'title',
@@ -168,6 +168,7 @@ function markdown_config() {
             },
         ])
         .then(answers => {
+
             confirmation_prompt(answers);
 
         }).catch(err => {
@@ -193,7 +194,8 @@ function confirmation_prompt(data) {
                 md_check(data);
             } else if (response.redo_menu_choice === "Generate .MD") {
                 console.log("generating");
-                mdGenerator.generate(data);
+                
+                mdGenerator.generate(api_caller.api_request(data));
             } else {
                 console.log("Exiting . . . ");
             }
@@ -211,56 +213,46 @@ function md_check(data) {
                 name: 'author',
                 message: questions[0],
                 default: String(data.author)
-
             },
             {
                 name: 'title',
                 message: questions[1],
                 default: String(data.title)
-
             },
             {
                 name: 'description',
                 message: questions[2],
                 default: String(data.description)
-
             },
             {
                 name: 'githubEmail',
                 message: questions[3],
                 default: String(data.githubEmail)
-
             },
             {
                 name: 'githubRepo',
                 message: questions[4],
                 default: String(data.githubRepo)
-
             },
             {
                 name: 'usage',
                 message: questions[5],
                 default: String(data.usage)
-
             },
             {
                 name: 'test',
                 message: questions[6],
                 default: String(data.test)
-
             },
             {
                 name: 'contribution',
                 message: questions[7],
                 default: String(data.contribution)
-
-
             },
             {
                 name: 'license',
                 message: questions[8],
                 default: String(data.license)
-
             },
         ])
         .then(answers => {
