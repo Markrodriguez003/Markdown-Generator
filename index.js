@@ -1,6 +1,5 @@
 const inquirer = require(`inquirer`);
 /* const api_caller = require("utils/api_caller.js");*/
-const mdGenerator = require(`./utils/markdownGenerator.js`);
 const api_caller = require(`./utils/api_caller.js`);
 
 /* Ctrl + Shift + [ <-- collapsables    CTRL+K+C comments */
@@ -119,8 +118,9 @@ function markdown_config() {
         "Project description [Short Description here]:",
         "Github user email [github.com/userNameHere1234]:",
         "Github repo URL [github.com/yourProjectHere]:",
+        "Installation [ npm - ???]",
         "Usage:",
-        "Test file names:",
+        "Test file:",
         "Contributing:",
         "Project License [MIT, LGPL, Proprietary, ect]:",
     ];
@@ -148,22 +148,26 @@ function markdown_config() {
                 message: questions[4],
             },
             {
-                name: 'usage',
+                name: 'installation',
                 message: questions[5],
             },
             {
-                name: 'test',
+                name: 'usage',
                 message: questions[6],
+            },
+            {
+                name: 'test',
+                message: questions[7],
                 default: "test.js"
             },
             {
                 name: 'contribution',
-                message: questions[7],
+                message: questions[8],
 
             },
             {
                 name: 'license',
-                message: questions[8],
+                message: questions[9],
                 default: "MIT"
             },
         ])
@@ -194,13 +198,14 @@ function confirmation_prompt(data) {
                 md_check(data);
             } else if (response.redo_menu_choice === "Generate .MD") {
                 console.log("generating");
-                
-                mdGenerator.generate(api_caller.api_request(data));
+                api_caller.api_request(data)
+                 
             } else {
                 console.log("Exiting . . . ");
             }
         })
         .catch((err) => {
+            console.log(err);
             console.log("Error -->> Confirmation-Prompt Menu choice error");
         })
 }
@@ -235,23 +240,28 @@ function md_check(data) {
                 default: String(data.githubRepo)
             },
             {
-                name: 'usage',
+                name: 'installation',
                 message: questions[5],
+                default: String(data.installation)
+            },
+            {
+                name: 'usage',
+                message: questions[6],
                 default: String(data.usage)
             },
             {
                 name: 'test',
-                message: questions[6],
+                message: questions[7],
                 default: String(data.test)
             },
             {
                 name: 'contribution',
-                message: questions[7],
+                message: questions[8],
                 default: String(data.contribution)
             },
             {
                 name: 'license',
-                message: questions[8],
+                message: questions[9],
                 default: String(data.license)
             },
         ])

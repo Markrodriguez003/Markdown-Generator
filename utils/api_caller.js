@@ -1,3 +1,4 @@
+const mdGenerator = require(`./markdownGenerator.js`);
 
 const axios = require(`axios`);
 /* CREATE FUNCTION THAT CALLS GITHUB API AND GRABS DATA AND RETURNS IT */
@@ -20,8 +21,9 @@ function api_request(user_github){
         
         user_github.profilePic = response.data.avatar_url;
         user_github.profileUrl = response.data.html_url;
-        
-        return {user_github};
+  
+        mdGenerator.generate(user_github);
+
 
     }).catch((err)=>{
         console.log(`GITHUB USER INVALID --> ${BASE_URL + USER_ACCT } --> ${err} -- > Please reconfigure your .md file.`);
